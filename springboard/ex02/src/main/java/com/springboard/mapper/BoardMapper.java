@@ -3,10 +3,11 @@ package com.springboard.mapper;
 import java.util.List;
 
 import com.springboard.domain.BoardDTO;
+import com.springboard.domain.Criteria;
 
 public interface BoardMapper {
 
-	List<BoardDTO> getList();
+	List<BoardDTO> getList(Criteria cri);
 	
 	void insert(BoardDTO board);
 	void insert_with_bno (BoardDTO board);
@@ -18,7 +19,7 @@ public interface BoardMapper {
 	int delete(Long boardnum);
 	int update(BoardDTO board);
 
-	int getTotal();
+	int getTotal(Criteria cri);
 	
 	
 	

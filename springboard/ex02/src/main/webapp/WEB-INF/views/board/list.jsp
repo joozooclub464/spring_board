@@ -106,6 +106,7 @@
 						<a href="#" class="button primary icon solid fa-search">검색</a>						
 					</div>
 					<input type="hidden" name="pagenum" value="">
+					<input type="hidden" name="amount" value="">
 				</form>
 				<!-- 페이징 처리 -->
 				<div style="text-align: center">
@@ -128,7 +129,9 @@
 				</div>
 				<form id="pageForm" name="pageForm" action="/board/list" method="get">
 					<input type="hidden" name="pagenum" value="${pageMaker.pagenum}">
-					
+					<input type="hidden" name="amount" value="">
+					<input type="hidden" name="type" value="">
+					<input type="hidden" name="keyword" value="">
 				</form>
 			</div>
 		</div>

@@ -3,7 +3,37 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.springboard.mapper.BoardMapper">
-	<select id="getList" resultType="com.springboard.domain.BoardDTO">
+	<!-- 
+		두 가지의 기능(전체 개수 검색, 전체 리스트 검색)이 하나의 쿼리문을 둘 다 사용하게 되는 경우에는
+		하나하나 다 써주게 되면 가독성과 유지보수가 좋지 않다. 따라서 <sql> 태그로 분리한 후 
+		<include>로 추가해서 사용한다. 검색 조건 처리, 데이터의 개수 처리가 함께 있지 않기 때문에
+		각각 분업 후 합치는 것이 가능하다.(가독성이 좋아진다)
+	 -->
+	<sql id="cri">
+		<if test="keyword != null and type != null">
+			<trim prefixOverrides="or" prefix="(" suffix=") and">
+				<!--  type : "T", "C"  -->
+				<foreach item="type" collection="typeArr"><!-- 자동으로 getTypeArr() {"T","C"} 가 들어있는 배열을 꺼내올 것임  -->
+					<trim prefix="or">
+						<choose>
+							<when test="type == 'T'.toString()">
+								(boardtitle like '%${keyword}%')
+								<!-- $를 사용한 이유는 따옴표 없이 연결해야 하기 땜시 -->
+							</when>
+							<when test="type == 'C'.toString()">
+								(boardtitle like '%${keyword}%')
+							</when>
+							<when test="type == 'W'.toString()">
+								(boardtitle like '%${keyword}%')
+							</when>
+						</choose>
+					</trim>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+	<!-- <select id="getList" resultType="com.springboard.domain.BoardDTO">
 		<![CDATA[
 			select boardnum,boardtitle,boardcontents,boardwriter,regdate,updatedate
 			from
@@ -11,9 +41,26 @@
 				regdate,updatedate from spring_board where rownum<=131 order by boardnum desc)
 			where rn>0
 		]]>	
+	</select> -->
+	<select id="getList" resultType="com.springboard.domain.BoardDTO">
+		<![CDATA[
+			select boardnum,boardtitle,boardcontents,boardwriter,regdate,updatedate
+			from
+				(select rownum rn,boardnum,boardtitle,boardcontents,boardwriter,
+				regdate,updatedate from spring_board where 
+		]]>	
+		<include refid="cri"></include>
+		<![CDATA[
+				rownum<=#{pagenum}*#{amount} order by boardnum desc)
+			where rn>(#{pagenum}-1)*#{amount})
+		]]>				
 	</select>
+	
+	<!-- pagenum=3 amount=10 type="TC" keyword="트1" -->
 	<select id="getTotal" resultType="_int">
-		select count(*) from spring_board where boardnum>0
+		select count(*) from spring_board where 
+		<include refid="cri"></include>
+		boardnum>0
 	</select>
 	
 	<insert id="insert">

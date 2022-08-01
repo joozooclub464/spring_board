@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboard.domain.BoardDTO;
+import com.springboard.domain.Criteria;
 import com.springboard.mapper.BoardMapper;
 
 import lombok.Setter;
@@ -20,15 +21,15 @@ public class BoardServiceImpl implements BoardService{
 	private BoardMapper mapper;
 	
 	@Override
-	public List<BoardDTO> getList() {
+	public List<BoardDTO> getList(Criteria cri) {
 		log.info("BoardService - getList");
-		List<BoardDTO> list = mapper.getList();
+		List<BoardDTO> list = mapper.getList(cri);
 		log.info(list);
 		return list;
 	}
 	
 	@Override
-	public int getTotal() {
-		return mapper.getTotal();
+	public int getTotal(Criteria cri) {
+		return mapper.getTotal(cri);
 	} 
 }
