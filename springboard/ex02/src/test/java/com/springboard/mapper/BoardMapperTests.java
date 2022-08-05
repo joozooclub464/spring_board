@@ -1,6 +1,6 @@
 package com.springboard.mapper;
 
-import java.awt.List;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.springboard.domain.BoardDTO;
+import com.springboard.domain.Criteria;
+import com.springboard.mapper.BoardMapper;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -17,67 +19,66 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 public class BoardMapperTests {
-
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
-//	@Test 
+//	@Test
 //	public void getListTest() {
-////		log.info(mapper.getList().size());
 //		log.info(mapper.getList());
 //	}
 	
 //	@Test
 //	public void insertTest() {
-//		BoardDTO board = new BoardDTO(); //여기 board객체에는 boardnum이 없음
-//										//DB에서 새롭게 긁어오는 애한테는 boardnum이 있음.
+//		BoardDTO board = new BoardDTO();
 //		board.setBoardcontents("매퍼 테스트 내용");
 //		board.setBoardtitle("매퍼 테스트 제목");
 //		board.setBoardwriter("매퍼 테스트 작성자");
-//		log.info("------insertTest-----");
-////		mapper.insert(board); //insert로 board를 넘겨야 넘기는 중에 시퀀스를 통해서 boardnum이 부과됨.
+//		log.info("------insertTest------");
+////		mapper.insert(board);
 //		mapper.insert_with_bno(board);
 //		log.info(board);
 //	}
 	
-	//boardnum == 362
-	
-//	@Test
-//	public void deleteTest() {
-//		log.info("-----deleteTest-----");
-//		mapper.delete((long)362);
-//		
-//	}
-
-
+//	1900546
 //	@Test
 //	public void readTest() {
 //		//long --> Long
 //		//int --> Integer
 //		//정수L, 정수l : long타입 값
-//		BoardDTO board = mapper.read(362);
+//		BoardDTO board = mapper.read(1900546L);
 //		log.info(board);
 //	}
 //	@Test
 //	public void deleteTest() {
-//		log.info("DELETE : "+mapper.delete(362));
+//		log.info("DELETE : "+mapper.delete(1900546L));
 //	}
 	
 //	@Test
 //	public void updateTest() {
 //		BoardDTO board = new BoardDTO();
-//		log.info("-----updateTest-----");
-//		board.setBoardnum((long)362);
-//		board.setBoardtitle("매퍼 테스트 제목");
-//		board.setBoardwriter("매퍼 테스트 작성자");
-//		board.setBoardcontents("매퍼 테스트 내용");
-//		mapper.update(board);
+//		board.setBoardnum(1900546L);
+//		board.setBoardtitle("수정 테스트1");
+//		board.setBoardcontents("수정 테스트2");
+//		board.setBoardwriter("admin");
+//		log.info(mapper.update(board));
+//	}
+//	@Test
+//	public void getTotalTest() {
+//		Criteria cri = new Criteria(3,10);
+//		cri.setType("W");
+//		cri.setKeyword("apple");
+//		log.info(mapper.getTotal(cri));
 //	}
 	
 	@Test
-	public void getTotalTest() {
-		log.info(mapper.getTotal());
+	public void getListWithKeyword() {
+		Criteria cri = new Criteria(2,10);
+		cri.setType("W");
+		cri.setKeyword("apple");
+		log.info(mapper.getList(cri));
 	}
 	
-	
 }
+
+
+

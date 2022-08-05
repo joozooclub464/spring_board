@@ -5,13 +5,12 @@ import java.util.List;
 import com.springboard.domain.BoardDTO;
 import com.springboard.domain.Criteria;
 
+//수정버튼클릭 -> Controller -> service -> mapper -> 쿼리 -> DB
 public interface BoardMapper {
-
 	List<BoardDTO> getList(Criteria cri);
 	
 	void insert(BoardDTO board);
-	void insert_with_bno (BoardDTO board);
-	
+	void insert_with_bno(BoardDTO board);
 	
 	BoardDTO read(Long boardnum);
 	//게시글이 삭제되었다면 1 이상의 값이 리턴되고
@@ -20,9 +19,4 @@ public interface BoardMapper {
 	int update(BoardDTO board);
 
 	int getTotal(Criteria cri);
-	
-	
-	
-	
-	
 }

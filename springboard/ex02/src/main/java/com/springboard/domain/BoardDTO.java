@@ -10,8 +10,4 @@ public class BoardDTO {
 	private String boardwriter;
 	private String regdate;
 	private String updatedate;
-	
-	
-	
-	
 }

@@ -70,14 +70,14 @@
 						</thead>
 						<tbody>
 							<c:choose>
-								<c:when test = "${list != null and list.size() > 0 }">
+								<c:when test="${list != null and list.size()>0}">
 									<c:forEach items="${list}" var="board">
 										<tr>
-											<td>${board.boardnum}</td>
-											<td>${board.boardtitle}</td>
-											<td>${board.boardwriter}</td>
-											<td>${board.regdate}</td>
-											<td>${board.updatedate}</td>
+											<td>${board.boardnum }</td>
+											<td><a href="#">${board.boardtitle }</a></td>
+											<td>${board.boardwriter }</td>
+											<td>${board.regdate }</td>
+											<td>${board.updatedate }</td>
 										</tr>
 									</c:forEach>
 								</c:when>
@@ -86,7 +86,7 @@
 										<td colspan="5">작성된 게시글이 없습니다.</td>
 									</tr>
 								</c:otherwise>
-							</c:choose>		
+							</c:choose>				
 						</tbody>
 					</table>
 				</div>
