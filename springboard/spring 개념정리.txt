@@ -544,6 +544,7 @@ mapper만들기
 	-----------------------------------------------------------------------
 Naming Convention(명명 규칙)
 	패키지명 : com.koreait
+		보통 도메인주소를 거꾸로 쓰는 식으로 감. 뒤에는 기업,프로젝트이름(경우에 따라 다름)
 
 	요소별 명명
 		config : 프로젝트와 관련된 설정 클래스들의 보관 패키지
@@ -593,7 +594,388 @@ Naming Convention(명명 규칙)
 	-----------------------------------------------------------------------
 
 ================================================================
-# day09 - 
+# day09 - 페이징처리 마무리, 검색
+
+	* /board/list할 때 앞에 경로가 달라져도 일단 컨트롤러로 모두 들어가긴 함(호출이 되긴 됨.ex02까지가 루트니까..)
+	근데 어떠한 이유에서인지 경로를 바꾸면 페이지가 제대로 넘어가지 않는 문제가 생김.
+	일단 /로 맞춰서 해보기.
+
+	리스트 띄울 때 검색한 키워드 + pagenum 모두 받아와야 함
+	Criteria 만들어주기(게시글을 띄우기 위한 목록)
+
+	스프링에서는 내부에 있는 필드를 똑같이 라라미터를 넘겨준다면 자동으로 객체화 가능
+	즉 매개변수에 DTO를 담을 수 있다.
+	매개변수에 Criteria를 담고 PageDTO에 cri 넘겨줌.
+
+	getList에도 cri넘겨주고 BoardService의 getList 수정해줌
+	getTotal도 cri 넘겨주기
+	BoardController에서 BoardService로 넘어와서 Criteria타입의 cri로 매개변수 넣어주기
+		아래 getTotal도 Criteria타입으로 매개변수 넣기
+	BoardService가 수정되었으니 BoardServiceImpl도 Criteria타입으로 수정해주기
+	BoardMapper로 가서 Criteria타입으로 수정해주기
+	BoardMapper.xml도 어떤 매개변수 하나를 받아왔기 때문에(Criteria타입의 객체로) => get total 바꿔....좀 복잡해짐..
+
+	Criteria 로 받은 (ex)"TC"는 문자열이고 그것을 type.split("")해준 {"T","C"}이 컬렉션임
+
+	#{boardtitle}은 진짜 필드 boardtitle을 찾는 것이 아니고 getter를 찾는것임
+	즉 getBoardtitle() 메소드를 써서 리턴되는 값을 #{boardtitle} 에 ""를 붙여서 써주는 것임
+
+	검색 조건을 먼저 걸러준 후에 페이지 rownum을 해줘야 함 
+	
+
+	@Test
+	getTotal() 그냥 테스트 불가 -> Criteria 만들어서 테스트 돌려주기
+		Criteria cri = new Criteria(3,10);
+		Criteria 로 3페이지 이고 10개씩 띄운다
+
+	-> getTotalTest() JunitTest 에러뜸...whyrano...ㅜㅜ
+	=> spring invalid bound statement 이 에러라고 하는데 구글링을 해도 방법을 모르겠다...ㅜ
+	알고보니 컨트롤러 테스트부터 에러가 발생했던것이었음. 분명 돌아갔던걸로 기억하는데 대체 와이??
+	시험끝나고 다시 잡느라 공백이 살짝 있었어서 발생한 문제.....
+	아니그래서...
+	nested exception is java.lang.NullPointerException 이 에러고,,
+	query에 null값이 들어가면 발생하는 문제인디
+	왜 내 눈에는 안보일까..ㅜ
+	쿼리문 문제가 맞았음. 괄호 갯수 잘 확인하자...
+
+	-> 500에러뜸.
+	domain.PageDTO에서 pagenum을 찾을 수 없다고 뜸.
+	뷰단에 pagenum은 cri안에 있기 때문에 pageMaker.cri.pagenum으로 수정해주면 해결.
+
+	-----------------------------------------------------------------------
+MyBatis의 동적 태그들
+	if
+	choose(when,otherwise)
+	where
+	trim
+	foreach
+
+[if]
+	<if test="type=='T'.toString()">
+		if문의 조건이 참일때만 쿼리문으로 써짐
+	</if>
+
+[choose]
+	<choose>
+		<when test="조건식">
+			조건 실행
+		</when>
+		...
+		<otherwise>
+			
+		</otherwise>
+	</choose>	
+
+[where]
+	select * from spring_board
+	<where>
+		<if test="">
+			boardnum=#{boardnum}
+		</if>
+	</where>
+
+[trim]
+	<trim prefix="앞에붙일 문자열" suffix="끝에붙일 문자열" prefixOverrides="">
+		쿼리문
+	</trim>
+
+	ex)
+	<trim prefix="or(" suffix=") and" prefixOverrides="or">
+		boardnum=#{boardnum}
+	</trim>
+	(boardnum=#{boardnum}) and
+
+	//prefixOverrides="or" : 맨 앞에 있는 or는 지워진다
+
+[foreach]
+	List, 배열, Map 등을 이용해서 루프를 처리한다.
+
+	<foreach item="값을 꺼내올 변수" index="인덱스 or Key" collection="컬렉션">
+
+	</foreach>
+
+
+동적쿼리가 여러번 중복되는 경우
+	mapper 안에 
+		<sql id="cri"> 
+			중복되는 동적쿼리문
+		</sql>
+	로 만들어 준 후 해당 쿼리문이 필요한 곳에
+		<include refid="cri"></include>
+		와 같이 include해주면 됨
+----------------------------------------------------------------------------
+동적쿼리 사용 예시(where절을 쓰지 않아도 prefix로 해결 가능함)
+
+map.put("T","TTTT");
+map.put("C","CCCC");
+
+select * from spring_board
+<trim prefix="WHERE(" suffix=")" prefixOverrides="or">
+	<foreach item="val" index="key" collection="map">
+		<trim prefix="or">
+			<choose>
+				<when test="key=='T'.toString()">
+					title=#{val}
+				</when>
+				<when test="key=='C'.toString()">
+					contents=#{val}
+				</when>
+				<when test="key=='W'.toString()">
+					writer=#{val}
+				</when>
+			</choose>
+		</trim>
+	</foreach>
+</trim>
+
+select * from spring_board
+	WHERE(title='TTTT' or contents='CCCC')
+----------------------------------------------------------------------------
+
+================================================================
+# day10 - 페이지 정렬과 검색기준 확인(글 내용을 검색하는것은 글 등록 이후에 할것)
+----------------------------------------------------------------------------
+오라클 INDEX 이름변경
+	ALTER INDEX 기존이름 RENAME TO 새로운이름;
+
+인덱스
+	데이터베이스 테이블을 하나의 책이라고 가정하면, 인덱스는 각 페이지 번호를 의미한다.
+	이를 통해서 원하는 내용을 위에서부터 혹은 반대로 찾아나가는 것을 스캔한다 라고 표현한다.
+	데이터베이스에 테이블을 만들 때 PK를 부여하면 PK컬럼을 기준으로 PK 이름과 동일한
+	인덱스가 생성되고 이는 실제 테이블의 데이터가 어디에 저장되어 있는지(ROWID)를 
+	찾을 수 있는 KEY값이다. 실제 테이블의 데이터가 저장된 각 행에는 ROWID 라는 것이
+	존재하고 데이터베이스 내의 주소값같은 의미를 가진다.
+
+	INDEX			TABLE
+	boardidx	ROWID	ROWID	boardnum	title	...
+	1		AAE80	AAE80	1		...
+	2		AAE81	AAE81	2		...
+	3		AAE82	AAE87	524		...
+				AAE82	3		...
+
+힌트(Hint) : /*+ hint구문 */
+	SELECT문에 실행하고 싶은 계획을 전달할 때 사용하는 문법
+	잘못 작성되어도 실행할 때는 무시되며 별도의 오류는 발생하지 않는다.
+	/*+ 로 시작되며 */로 마친다. 또한 뒤에 컬럼명을 작성할 때 , 를 사용하지 않는다.
+	인덱스 기준으로 검색을 해올 시 정렬이 따로 필요하지 않으므로 속도가 향상된다.
+----------------------------------------------------------------------------
+*페이지 검색
+
+spring_board 내부의 인덱스는 pk이름과 동일하게 만들어져 있음(sys_c0010549)
+-> ALTER INDEX sys_c0010549 RENAME TO boardidx;
+를 사용하여 인덱스 이름 변경
+
+인덱스는 페이지를 의미.
+테이블은 저장된 데이터를 찾아서 하나로 뭉쳐서 보여주는 것 -> 인덱스 순서대로 진행되지 않고 갑자기 뒤의 rowid가 튀어나올 수 있음
+rowid를 주소값이라고 생각할 수 있지만 물리적으로 순서대로 위치한 것은 아니고 식별자 정도로 생각하면 됨
+그 rowid들을 index로 따로 관리하는 것.
+사실 rowid는 컴퓨터가 임의로 부여해주기 때문에 우리가 순서를 알 수는 없지만 어떤 규칙성을 가진 채 저장되어 있음
+
+
+검색이 실행되도 검색조건을 유지시키기 위해 
+${pageMaker.cri.type == "T"?"selected":""}를 value에 추가해줌.
+
+글등록버튼 href에 /board/regist${pageMaker.cri.listLink} 로 연결해줌.
+-> Criteria에 getListLink() 메서드는 쿼리스트링 만들어서 리턴해주는 형식으로 만들어뒀지만 getter로서 활용이 됨(그래서 getter라서 List가 대문자로 바뀐것)
+-> listLink를 그대로 뷰단에서 el문으로 사용하면 어차피 getter를 찾기 때문에 getListLink를 사용하게 되고 리턴되는 쿼리스트링이 뒤에 붙게됨
+
+-> board의 regist로 매핑을해서 그쪽으로 가게 만들어야 함 
+-> BoardController 에 getMapping regist 추가해주기
+
+*이때
+@GetMapping("/regist") 
+	public void regist(Criteria cri, Model model) {
+		//링크 하나가 파라미터로 날아옴 -> Criteria 하나를 받아서 -> Model에 추가해서 돌려줘야함
+		model.addAttribute("cri",cri); //Criteria는 내가 날아온 파라미터로 만든 cri야.
+		//뷰단으로 이동(void)라서 자동으로 이동됨
+	}
+여기서 
+(@ModelAttribute("cri")Criteria cri,Model model)
+로 해주면 파라미터를 받아오자마자 바로 "cri"라는 이름으로 모델에 추가해줄 수 있음(addAttribute로 세팅해줄 필요가 없음)
+----------------------------------------------------------------------------
+*글등록
+
+뷰단에서 글을 작성해서 제출하면 post방식으로 넘어감
+-> 컨트롤러에 @PostMapping("/regist") 로 regist()메소드 작성
+service 인터페이스에 boardDTO를 받은 regist메소드 작성
+serviceImpl에 override 해주고
+serviceTest 실행
+테스트 성공하면 컨트롤러에서 바로 service사용(service.regist에 board 넘겨줌)
+
+regist는 시스템에 변동이 있기 때문에 redirect인지 forward인지 정해줘야 함(default는 forward)
+redirect는 'redirect:' 접두어를 사용하게 되면 스프링 MVC가 자동으로 redirect로 처리해준다
+	(여기서는 return "/board/list"; 였기 때문에
+		return "redirect:/board/list"; 로 작성)
+
+등록된 번호를 가지고 n번 게시글이 등록되었다는 메시지를 띄우고 싶으면 등록한 객체를 redirect임에도 불구하고 보내줘야함(list로 boardnum이라도 보내줘야함)
+->개념 : session이용 (boardnum을 세션에 세팅해두고 세션에서 꺼내서 씀)
+-> RedirectAttributes ra 매개변수로 선언해서 사용(세션 기반으로 애초에 만들어진 공간)
+		//새롭게 등록한 게시글의 번호를 redirect로 같이 보내주려면
+		//Model 대신에 RedirectAttributes를 사용
+		ra.addFlashAttribute("wn",board.getBoardnum());
+----------------------------------------------------------------------------
+*list.jsp에 자바스크립트로 추가.
+	wn = "${wn}";
+	//$(document).ready(함수) : 문서가 로딩이 완료되면 건네주는 함수 호출
+	$(document).ready(
+		function() {
+			if(wn == '' || history.state) {
+				return;
+			}
+			if(parseInt(wn) > 0) {
+				alert(wn+"번 게시글이 등록되었습니다.");
+				history.replaceState({},null,null); /* replaceState : history객체에 쌓이고 있는 기록들을 초기화해주는것 */
+			}
+			
+		}
+	)
+----------------------------------------------------------------------------
+
+================================================================
+# day11 - 글 등록 인코딩, 글 수정,삭제, 게시글보기
+
+----------------------------------------------------------------------------
+* 인코딩
+jsp에서는 httpServletRequest,httpServletResponse로 했었음
+
+listener - 사용자가 요청을 보냈을 때 가장 먼저 요청을 받을 수 있음
+filter - 요청을 받아서 Servlet mapping되어있는 곳으로 가야할 때 한번 거쳐가는 휴게소 같은 느낌
+
+spring framework에는 기본적으로 인코딩을 해주는 필터가 있음
+
+web.xml > web-app 안에 
+	<!-- 한글 깨짐 방지(인코딩) -->
+	<filter>
+		<filter-name>encoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>
+-> appServlet으로 가려면 encoding이라는 필터를 거쳐야 함. 그리고 encoding이라는 필터는 'org.springframework.web.filter.CharacterEncodingFilter' 이 클래스를 뜻함
+   filter객체를 생성할 때(initialize) 의 인자(param)의 이름은 encoding이고 그것의 value는 UTF-8이다. 
+
+----------------------------------------------------------------------------
+* 게시글 보기
+
+게시글을 본 후에 다시 뒤로 돌아가면 board list가 뜨게 하기 위해 pageForm 이용.
+-> 게시글 보기를 눌렀을 때 a href에 써져있는 ${board.boardnum}을 pageForm안에 input하나를 추가해서 submit 시킴
+
+	$(".get").on("click",function(e){
+		e.preventDefault(); //페이지 이동
+				//<input type='hidden' name='boardnum' value='           123          '> 이렇게 생긴게 하나 추가될것임.(js노드를 배워야지 코드를 줄일 수 있을듯)
+		pageForm.append("<input type='hidden' name='boardnum' value='"+$(this).attr("href")+"'>");
+		pageForm.attr("action","/board/get");
+		pageForm.submit();
+	})
+append() 함수를 사용하면 pageForm뒤에 append안의 내용이 추가됨
+value는 클릭한 href가 써져있는 value이기 때문에 $(this).attr("href")를 가운데에 연결해줌
+-> input hidden이 하나 만들어짐
+attr의 action이라는 속성을 /board/get으로 바꿔줌
+그리고 pageForm을 submit해줌
+=> 요소가 추가되고 get으로 바뀐 채 제출됨
+
+> boardController로 가서 get을 GetMapping해줌
+	-> 게시글의 정보를 가져갈것이기 때문에 Model도 필요함
+	디비에서 게시글 번호에 해당하는것을 긁어와야 하기 때문에 service를 이용해야함
+	> service에 BoardDTO get() 메서드 만들어주기
+	> serviceImpl에 재정의 > mapper.read(boardnum)
+>service @Test
+	BoardDTO board = service.get(1L); //Long타입의 boardnum으로 넘어감(오토박싱)
+>Controller
+	model.addAttribute("board",service.get(boardnum));
+	> service.get으로 받아온 boardnum 넘겨주면서 검색해옴 -> 이 DTO타입을 model.addAttribute에 board라는 이름으로 추가해서 보냄
+>controller @Test
+	@Test
+	public void getTest() throws Exception {
+		ModelAndView mav = mvc.perform(
+			MockMvcRequestBuilders.get("/board/get")
+				.param("pagenum", "2")
+				.param("amount", "10")
+				.param("boardnum", "1")
+				
+			).andReturn().getModelAndView();
+		
+		log.info(mav.getModelMap());
+		log.info(mav.getViewName());
+	}
+----------------------------------------------------------------------------
+* 게시글 수정
+
+수정버튼에
+onclick="location.href='/board/modify${cri.listLink}&boardnum=${board.boardnum}'"
+	-> modify로 이동하되 Criteria의 정보들은 그대로 넘어갔을것이고 boardnum이 추가로 넘어감
+	> modify를 통해 controller로 감
+>Controller
+	modify 달아주기(수정하러 페이지 이동하는것.)
+	@GetMapping("/modify")
+	public void modify(Long boardnum, @ModelAttribute("cri")Criteria cri, Model model) {
+		//수정하러 페이지 이동함.
+		//Long타입의 boardnum하나 넘어오고, ModelAttribute로 그대로 날아온 cri를 다시 추가해줌,
+		//수정할 게시글의 내용이 미리 써져있어야 하기 때문에 그걸 담아서 들고갈 Model도 필요함.
+		model.addAttribute("board",service.get(boardnum));
+		//수정하기 위해서는 수정 전 정보를 검색해서 들구가야 함.
+	}
+	위와 같은 형식으로 만들어지는 것.
+
+***똑같은 메서드를 여러번 만드는 것은 무의미함
+	>아래의 메소드는 /get이나 /modify인 경우에 호출되는데 그 떄 호출하는 uri대로 view를 찾을 것이다
+	>즉 /get으로 요청해서 호출됐다면 get.jsp를, /modify로 요청해서 호출됐다면 modify.jsp를 찾게 된다.
+	@GetMapping({"/get","/modify"})
+		public void get(Long boardnum, @ModelAttribute("cri") Criteria cri, Model model) {
+			model.addAttribute("board",service.get(boardnum));
+	}
+-> @GetMapping에 배열로 두 메서드를 모두 넘겨줌
+-> 위의 방법이 가능한 이유는 리턴타입이 void이기 때문에 요청한 url로 파일을 찾음(메서드 이름으로 파일을 찾는것이아님)
+
+>view단.
+	submit이 일어나면 form에 적혀있는 정보들을 가지고 action으로 날아감
+	> method가 post방식이므로 getMapping에 들어가지 않음.
+	> boardcontroller에 @PostMapping으로 하나를 더 달아줌
+>ControllerTest
+	에서 유일하게 확인할 수 없는 것이 flashattribute임(model로서 볼 수가 없음)
+	>@Test
+	public void modifyTest() throws Exception{
+		MvcResult result = mvc.perform(
+			MockMvcRequestBuilders.post("/board/modify")
+				.param("boardnum", "1")
+				.param("boardtitle", "수정된 게시글 제목")
+				.param("boardcontents","수정된 게시글 내용")
+				.param("boardwriter", "apple")
+				.param("amount", "10")
+				.param("boardnum", "3")
+					
+		).andReturn();
+		ModelAndView mav = result.getModelAndView();
+			
+			//ModelMap은 Flash 영역은 나오지 않는다
+			log.info(mav.getModelMap());
+			log.info(mav.getViewName());
+			log.info(result.getFlashMap());
+	}
+
+	> 위와 같이 진행하면 FlashMap[attributes={mn=1}, 값을 확인할 수 있음
+	>list로 돌아가게 만들었기 때문에
+	>list.jsp에서 
+
+
+수정,삭제 후 cri넘어가게 만들어주기
+<input type="hidden" value="${cri.pagenum}" name="pagenum">
+<input type="hidden" value="${cri.amount}" name="amount">
+<input type="hidden" value="${cri.keyword}" name="keyword">
+<input type="hidden" value="${cri.type}" name="type">
+	
+----------------------------------------------------------------------------
+
+게시글 수정,삭제시 alert에 게시글번호 안 넘어가는 문제 해결하기
++ 게시글 등록시 비밀번호4자리 입력받고 수정,삭제 할 떄에도 처음에 입력한 비밀번호와 일치했을때만 수정,삭제가 가능하게 구현해볼것
+
+================================================================
 
 
 
