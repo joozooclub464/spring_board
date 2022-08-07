@@ -976,6 +976,44 @@ onclick="location.href='/board/modify${cri.listLink}&boardnum=${board.boardnum}'
 + 게시글 등록시 비밀번호4자리 입력받고 수정,삭제 할 떄에도 처음에 입력한 비밀번호와 일치했을때만 수정,삭제가 가능하게 구현해볼것
 
 ================================================================
+# day12 - 댓글등록
+----------------------------------------------------------------------------
+댓글등록 버튼을 누르면 댓글등록 폼이 열리도록 구현
+댓글등록 a태그에 regist클래스 붙어있음
+댓글등록 버튼을 누르면 replyForm의 display:none를 바꿔줌
+	> 댓글등록버튼을 눌렀을 때 replyForm을 보여주는 제이쿼리
+	$(".regist").on("click",function(e) {
+		e.preventDefault();
+		$(".replyForm").show();
+		$(this).hide(); //댓글등록폼이 보여지면 댓글등록 버튼은 숨겨져야 하기 때문에 this.hide를 사용함
+	})
+	> 취소 버튼을 누르면 다시 replyForm을 숨겨주는 제이쿼리
+	$(".canceel").on("click",function(e) {
+		e.preventDefault();
+		$("[name='replywriter']").val(""); //제이쿼리는 css선택자를 사용할 수 있음
+		$("[name='replycontents']").val(""); //댓글 작성자와 댓글내용을 텍스트박스에서 비워주는 작업
+		$(".replyForm").hide();
+		$(".regist").show(); //댓글등록버튼을 보여줌
+	})
+
+reply.js를 webapp/resoruces/assets/js/ 아래에 만들어서 get.jsp에 연동해줌
+----------------------------------------------------------------------------
+callback함수
+	: 매개변수로 함수를 넘겨주고 그 함수 소괄호를 통해서 넘겨준 함수를 호출하는것
+
+	const mycar = (function create() {
+		return {brand:"Ferrari"}; 
+	})(); //js에서 함수를 선언함과 동시에 호출한것
+	console.log(mycar.brand);
+
+	function factory(f) {
+		return f(); //f()는 사실 create()와 같음
+		// 위 create()의 객체를(Ferrari) 리턴받은것이고 다시 그 객체를 리턴함
+	}
+	factory(create);
+
+
+----------------------------------------------------------------------------
 
 
 
