@@ -53,7 +53,8 @@
 					<h1 class="home">Board</h1>
 					<p>게시판 목록</p>
 				</header>
-				<a href="" class="button primary small">글 등록</a>
+										<!-- cri.getListLink() : ?pagenum=4&amount=10... -->
+				<a href="/board/regist${pageMaker.cri.listLink}" class="button primary small">글 등록</a>
 				<br>
 				<br>
 				<!-- 게시글 띄우는 테이블 -->
@@ -74,7 +75,7 @@
 									<c:forEach items="${list}" var="board">
 										<tr>
 											<td>${board.boardnum }</td>
-											<td><a href="#">${board.boardtitle }</a></td>
+											<td><a class="get" href="${board.boardnum}">${board.boardtitle }</a></td>
 											<td>${board.boardwriter }</td>
 											<td>${board.regdate }</td>
 											<td>${board.updatedate }</td>
@@ -95,18 +96,18 @@
 					<div class="col-12" style="text-align:center;">
 						<select name="type">
 							<option value="">검색</option>
-							<option value="T">제목</option>
-							<option value="C">내용</option>
-							<option value="W">작성자</option>
-							<option value="TC">제목 또는 내용</option>
-							<option value="TW">제목 또는 작성자</option>
-							<option value="TCW">제목 또는 내용 또는 작성자</option>
+							<option value="T" ${pageMaker.cri.type == "T"?"selected":""}>제목</option>
+							<option value="C" ${pageMaker.cri.type == "C"?"selected":""}>내용</option>
+							<option value="W" ${pageMaker.cri.type == "W"?"selected":""}>작성자</option>
+							<option value="TC" ${pageMaker.cri.type == "TC"?"selected":""}>제목 또는 내용</option>
+							<option value="TW" ${pageMaker.cri.type == "TW"?"selected":""}>제목 또는 작성자</option>
+							<option value="TCW" ${pageMaker.cri.type == "TCW"?"selected":""}>제목 또는 내용 또는 작성자</option>
 						</select>
-						<input type="text" name="keyword" id="keyword">
+						<input type="text" name="keyword" id="keyword" value="${pageMaker.cri.keyword}">
 						<a href="#" class="button primary icon solid fa-search">검색</a>						
 					</div>
-					<input type="hidden" name="pagenum" value="">
-					<input type="hidden" name="amount" value="">
+					<input type="hidden" name="pagenum" value="${pageMaker.cri.pagenum}">
+					<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
 				</form>
 				<!-- 페이징 처리 -->
 				<div style="text-align: center">
@@ -115,7 +116,7 @@
 					</c:if>
 					<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="i">
 						<c:choose>
-							<c:when test="${pageMaker.pagenum == i}">
+							<c:when test="${pageMaker.cri.pagenum == i}">
 								<code>${i}</code>
 							</c:when>
 							<c:otherwise>
@@ -128,10 +129,10 @@
 					</c:if>
 				</div>
 				<form id="pageForm" name="pageForm" action="/board/list" method="get">
-					<input type="hidden" name="pagenum" value="${pageMaker.pagenum}">
-					<input type="hidden" name="amount" value="">
-					<input type="hidden" name="type" value="">
-					<input type="hidden" name="keyword" value="">
+					<input type="hidden" name="pagenum" value="${pageMaker.cri.pagenum}">
+					<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+					<input type="hidden" name="type" value="${pageMaker.cri.type}">
+					<input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
 				</form>
 			</div>
 		</div>
@@ -146,6 +147,15 @@
 <script>
 	const searchForm = $("#searchForm");
 	const pageForm = $("#pageForm");
+	
+	$(".get").on("click",function(e){
+		e.preventDefault(); //페이지 이동
+					   //<input type='hidden' name='boardnum' value='           123          '> 이렇게 생긴게 하나 추가될것임.(js노드를 배워야지 코드를 줄일 수 있을듯)
+		pageForm.append("<input type='hidden' name='boardnum' value='"+$(this).attr("href")+"'>");
+		pageForm.attr("action","/board/get");
+		pageForm.submit();
+	})
+	
 	$("#searchForm a").on("click",function(e){
 		if(!searchForm.find("option:selected").val()){
 			alert("검색 기준을 선택하세요.");
@@ -168,6 +178,36 @@
 		pageForm.submit();
 	})
 
+	wn = "${wn}";
+	//$(document).ready(함수) : 문서가 로딩이 완료되면 건네주는 함수 호출
+	$(document).ready(
+		function() {
+			if(wn == '' || history.state) {
+				return;
+			}
+			if(parseInt(wn) > 0) {
+				alert(wn+"번 게시글이 등록되었습니다.");
+				history.replaceState({},null,null); /* replaceState : history객체에 쌓이고 있는 기록들을 초기화해주는것 */
+			}
+			
+		}
+	)
+	
+	mn = "${mn}";
+	$(document).ready(
+			function() {
+				if(mn == '' || history.state) {
+					return;
+				}
+				if(parseInt(mn) > 0) {
+					alert(wn+"번 게시글이 수정되었습니다.");
+					history.replaceState({},null,null); /* replaceState : history객체에 쌓이고 있는 기록들을 초기화해주는것 */
+				}
+				
+			}
+		)
+		
+		
 </script>
 </html>
 

@@ -31,4 +31,26 @@ public class BoardServiceImpl implements BoardService{
 	public int getTotal(Criteria cri) {
 		return mapper.getTotal(cri);
 	}
+	
+	@Override
+	public void regist(BoardDTO board) {
+		mapper.insert_with_bno(board);
+	}
+	
+	@Override
+	public BoardDTO get(Long boardnum) {
+		return mapper.read(boardnum);
+	}
+	
+	@Override
+	public boolean modify(BoardDTO board) {
+		return 1 == mapper.update(board);
+	}
+	
+	@Override
+	public boolean remove(Long boardnum) {
+		return 1 == mapper.delete(boardnum);
+	}
+	
+	
 }

@@ -45,7 +45,8 @@
 		<![CDATA[
 			select boardnum,boardtitle,boardcontents,boardwriter,regdate,updatedate
 			from
-				(select rownum rn,boardnum,boardtitle,boardcontents,boardwriter,
+				(select /*+INDEX_DESC(spring_board boardidx) */
+				rownum rn,boardnum,boardtitle,boardcontents,boardwriter,
 				regdate,updatedate from spring_board where 
 		]]>	
 		<include refid="cri"></include>

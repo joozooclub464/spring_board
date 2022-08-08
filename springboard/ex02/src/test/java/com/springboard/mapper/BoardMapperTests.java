@@ -70,11 +70,19 @@ public class BoardMapperTests {
 //		log.info(mapper.getTotal(cri));
 //	}
 	
+//	@Test
+//	public void getListWithKeyword() {
+//		Criteria cri = new Criteria(2,10);
+//		cri.setType("W");
+//		cri.setKeyword("apple");
+//		log.info(mapper.getList(cri));
+//	}
+	
 	@Test
 	public void getListWithKeyword() {
 		Criteria cri = new Criteria(2,10);
-		cri.setType("W");
-		cri.setKeyword("apple");
+		cri.setType("T");
+		cri.setKeyword("목2");
 		log.info(mapper.getList(cri));
 	}
 	

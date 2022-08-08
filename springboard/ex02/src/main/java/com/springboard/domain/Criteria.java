@@ -35,7 +35,9 @@ public class Criteria {
 	public String getListLink() {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
 				.queryParam("pagenum", this.pagenum) //파라미터 추가
-				.queryParam("amount", this.amount);
+				.queryParam("amount", this.amount)
+				.queryParam("keyword", this.keyword)
+				.queryParam("type", this.type);
 		//?pagenum=3&amount=10
 		//위의 문자열 만드는 코드
 		//fromPath : ? 앞에 붙는 uri. (우리는 ? 뒤의 문자열만 만들 것이기 때문에 fromPath를 빈문자열로 준것)

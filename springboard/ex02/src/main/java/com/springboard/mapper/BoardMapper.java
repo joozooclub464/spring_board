@@ -19,4 +19,5 @@ public interface BoardMapper {
 	int update(BoardDTO board);
 
 	int getTotal(Criteria cri);
+	
 }
