@@ -1012,13 +1012,48 @@ callback함수
 	}
 	factory(create);
 
+REST (Representational State Transfer)
+	"하나의 URI는 하나의 고유한 리소스를 대표하도록 설계된다"
 
+	/board/get?boardnum=123 -> 데이터아님
+	/board/get/123 		-> Data
+
+@RestController
+	JSON 형태로 객체 데이터를 반환하기 위한 Controller
+
+----------------------------------------------------------------------------
+**에러
+list.jsp의 js에서 wn과 mn을 받아오지 못해서 게시글 수정,삭제 alert에 게시글 번호가 뜨지 않는 문제 발생
+-> 수정한 게시글 번호를 받아와야 하는데 등록한 게시글 번호를 받아오고 있어서 생긴 문제...
+변수명 확인을 잘 하자....꼼꼼하게..
 ----------------------------------------------------------------------------
 
 
+================================================================
+# day13 - 댓글 등록, 댓글 리스트 띄우기
+----------------------------------------------------------------------------
+**에러
+@Setter 의존성주입이 계속해서 안되는 문제 발생
+-> @Autowired를 임포트 해서 
+	import org.springframework.beans.factory.annotation.Autowired;
+위 클래스를 임포트해야함.
+빨간줄이 없다고 해서 @Autowired 임포트 잊지 말 것
+----------------------------------------------------------------------------
+regist는 reply.js에서 ajax로 쓰임
+즉 우리가 get.jsp에서 댓글 내용을 다 쓰면 그 댓글 내용으로 하나의 객체를 만들고 
+	-> {boardnum:boardnum,replywriter:replywriter,replycontents:replycontents},
+그것을 replyservice.add에 넘겨줌(reply.js)
+add는 insert라는 함수를 밖에서 add라고 부르기로 한 것이므로
+insert의 첫번째 매개변수(reply)로 그 객체가 날아옴
+ajax로 요청을 보낼 때 data에다가 그 reply를 json으로 바꿔서 보내줌
+바꿔서 보내주는건 json data 자체를 보내는것이기 때문에 보내는 데이터의 body자체가 json형태의 data임
+그 body가 ReplyController로 날아갈거고 
+그 body에 있는 내용을 해석해서 reply 라는 객체를 만들어내야함
+	-> 매개변수에 근야 ReplyDTO로 못 받아옴(파라미터가 아닌 body로 날아온것이기 때문) 
+	==> ReplyDTO 앞에다가 어노테이션으로 @RequestBody를 달아주면 됨
 
-
-
+================================================================
+# day14 - 
 
 
 
