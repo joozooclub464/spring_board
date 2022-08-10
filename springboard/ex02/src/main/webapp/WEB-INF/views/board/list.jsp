@@ -200,7 +200,7 @@
 					return;
 				}
 				if(parseInt(mn) > 0) {
-					alert(wn+"번 게시글이 수정되었습니다.");
+					alert(mn+"번 게시글이 수정되었습니다.");
 					history.replaceState({},null,null); /* replaceState : history객체에 쌓이고 있는 기록들을 초기화해주는것 */
 				}
 				

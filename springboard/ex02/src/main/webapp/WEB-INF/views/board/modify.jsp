@@ -26,7 +26,7 @@
 						<input type="hidden" value="${cri.type}" name="type">
 						<div class="col-12">
 							<h4>번호</h4>
-							<input name="boardnum" type="text" value="${board.boardnum}" >
+							<input name="boardnum" type="text" value="${board.boardnum}" readonly >
 						</div>
 						<hr>
 						<div class="col-12">

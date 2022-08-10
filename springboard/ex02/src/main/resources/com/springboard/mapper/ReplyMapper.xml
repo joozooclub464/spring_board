@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboard.mapper.ReplyMapper">
+	<insert id="insert">
+		insert into spring_reply (replynum,replywriter,replycontents,boardnum)
+		values(seq_reply.nextval,#{replywriter},#{replycontents},#{boardnum})
+	</insert>
+	<select id="getTotal" resultType="_int">
+		select count(*) from spring_reply where boardnum=#{boardnum} 
+	</select>
+	
+	<select id="getList" resultType="com.springboard.domain.ReplyDTO">
+		<!-- replynum의 인덱스명은 s_reply_pk 임 -->
+		<![CDATA[
+			select replynum, replywriter, replycontents, regdate, updatedate, boardnum
+			from (
+				select /*+ index_asc(spring_s_reply_pk)*/
+				rownum rn, replynum, replywriter, replycontents, regdate, updatedate, boardnu
+				from spring_reply where boardnum=#{boardnum} and rownum <= #{cri.pagenum}*#{cri.amount}
+			) where rn > (#{cri.pagenum}-1)*#{cri.amount}
+		]]>
+	</select>
+</mapper>

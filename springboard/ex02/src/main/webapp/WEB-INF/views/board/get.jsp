@@ -105,6 +105,74 @@
 		let replywriter = $("input[name='replywriter']").val();
 		let replycontents = $("textarea[name='replycontents']").val();
 		
+		replyService.add(
+			{boardnum:boardnum,replywriter:replywriter,replycontents:replycontents},
+			//프로퍼티(객체)로 add해줌 앞의 boardnum은 키값이고,뒤의 boardnum은 finish버튼눌렀을때의 let boardnum과 같음
+			function(result) {
+				alert("댓글 등록 완료!");
+			},
+			function(result) {
+				alert("댓글 등록 실패!");
+			}
+			//위의 함수들은 add쪽에서 받아서 콜백함수로 사용.
+			
+		)
+			//DOM 써서 내용 바꾸기
+			location.reload();
+	})
+	
+	$(document).ready(function() {
+		//댓글도 페이징 처리 할 것.
+		let boardnum = "${board.boardnum}"; 
+		let replies = $(".replies");
+		let pagenum = 1;
+		let page = $(".page"); //댓글 페이지
+		
+		showList(1);
+		
+		function showList(pagenum) {
+			//매개변수 page : 현재 띄워주어야 할 댓글의 페이지 번호
+			replyService.getList(
+				{boardnum : boardnum, pagenum : pagenum || 1},
+				//첫페이지일때는 pagenum이 넘어오지 않을 수 있음(게시글에 처음 넘어왔을때)
+				// => || 1 이라는 조건을 추가해준 것(페이지값이 넘어오지 않으면 1이 페이지값으로 넘어감)
+				function(replyCnt,list) {
+					if(list == null || list.length == 0) {
+						replies.html("<li>댓글이 없습니다.</li>");
+						return 
+					}
+					//검색해온 list 안의 내용들로 DOM 이용해서 화면에 뿌리기
+					/*
+						<li style="clear:both">
+							<div style="display:inline;float:left;">
+								<strong>apple</strong>
+									<p>댓글테스트</p>
+							</div>
+							<div style="text-align:right">
+								<strong>2022-08-15 19:55:55</strong><br>
+								<a href="#">수정</a>&nbsp;&nbsp;
+								<a href="#">삭제</a>
+							</div>
+						</li>
+					*/
+					let str = "";
+					for(let i=0, len=list.length; i<len; i++) {
+						str += '<li style="clear:both;">';
+						str += '<div style="display:incline;float:left;">';
+						//str += '<strong>'+list[i].replywriter+'</strong>';
+						str += `<strong>apple</strong>`;
+						//str += '<p class="'+list[i].replynum+'">' + list[i].replycontents+'</p></div>';
+						str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
+						str += '<div style="text-align:right">';
+						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>';
+						str += '<a href="#">수정</a>&nbsp;&nbsp;';
+						str += '<a href="#">삭제</a></div></li>';
+					}
+					replies.html(str);
+				}//여기까지가 하나의 함수
+			)
+		}
+		
 	})
 
 

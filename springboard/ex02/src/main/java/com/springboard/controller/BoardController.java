@@ -24,6 +24,7 @@ public class BoardController {
 	@Setter(onMethod_ = @Autowired)
 	private BoardService service;
 	
+	
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
 		log.info("------list------");
