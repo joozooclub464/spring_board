@@ -88,12 +88,16 @@
 <script src="/resources/assets/js/main.js"></script>
 <script src="/resources/assets/js/reply.js"></script>
 <script>
+	//document.getElementsByClassName("regist") [요소1,요소2,...]
+	//요소1.addEventListener("click",function(e) {
+	//	클릭되었을 때 수행할 문장
+	//})
 	$(".regist").on("click",function(e) {
 		e.preventDefault();
 		$(".replyForm").show();
 		$(this).hide(); //댓글등록폼이 보여지면 댓글등록 버튼은 숨겨져야 하기 때문에 this.hide를 사용함
 	})
-	$(".canceel").on("click",function(e) {
+	$(".cancel").on("click",function(e) {
 		e.preventDefault();
 		$("[name='replywriter']").val(""); //제이쿼리는 css선택자를 사용할 수 있음
 		$("[name='replycontents']").val(""); //댓글 작성자와 댓글내용을 텍스트박스에서 비워주는 작업
@@ -117,7 +121,7 @@
 			//위의 함수들은 add쪽에서 받아서 콜백함수로 사용.
 			
 		)
-			//DOM 써서 내용 바꾸기
+			//원래는 DOM 써서 내용 바꾸기
 			location.reload();
 	})
 	
@@ -159,18 +163,23 @@
 					for(let i=0, len=list.length; i<len; i++) {
 						str += '<li style="clear:both;">';
 						str += '<div style="display:incline;float:left;">';
-						//str += '<strong>'+list[i].replywriter+'</strong>';
-						str += `<strong>apple</strong>`;
-						//str += '<p class="'+list[i].replynum+'">' + list[i].replycontents+'</p></div>';
-						str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
+						str += '<strong>'+list[i].replywriter+'</strong>';
+						//str += `<strong>apple</strong>`;
+						str += '<p class="'+list[i].replynum+'">' + list[i].replycontents+'</p></div>';
+						//str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
 						str += '<div style="text-align:right">';
 						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>';
 						str += '<a href="#">수정</a>&nbsp;&nbsp;';
 						str += '<a href="#">삭제</a></div></li>';
 					}
 					replies.html(str);
+					//페이징 처리하는 함수 호출
+					showReplyPage(replyCnt);
 				}//여기까지가 하나의 함수
 			)
+		}
+		function showReplyPage(replyCnt) {
+			
 		}
 		
 	})

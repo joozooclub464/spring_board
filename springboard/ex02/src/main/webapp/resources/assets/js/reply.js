@@ -20,7 +20,7 @@ function factory(f) {
 //callback함수 : 매개변수로 함수를 넘겨주고 그 함수 소괄호를 통해서 넘겨준 함수를 호출하는것
 //-------------------------------------------------------------
 const replyService = (function() {
-	function insert(reply,callback,err) {
+	function insert(reply,callback,err){
 		//댓글등록기능
 		console.log('add reply.....');
 		//callback, err는 외부에서 전달받을 함수이다
@@ -35,11 +35,12 @@ const replyService = (function() {
 				success:function(result,status,xhr) {
 					if(callback) {
 						console.log("regist result: "+result);
+						//DOM 써서 내용 바꾸기
 						callback(result);
 					}
 				},
-				error:function(xhr,status,e) { //여기서 e는 trycatch의 e
-					if(err) {
+				error:function(xhr,status,e){ //여기서 e는 trycatch의 e
+					if(err){
 						err(e);
 					}
 				}
@@ -55,7 +56,7 @@ const replyService = (function() {
 		//ajax로 검색을 하고 결과를 받아와서 그 결과를 뿌려줘야함
 		//-> db에 있는걸 java로 검색하고 그 검색된 결과를 여기로 보내줌
 		$.getJSON(
-			"/reply/pages/"+boardnum+"/"+page+".json", //   /reply/pages/123/3.json 이런 형태로 보냄
+			"/reply/pages/"+boardnum+"/"+pagenum+".json", //   /reply/pages/123/3.json 이런 형태로 보냄
 			//위의 uri의 json을 정상적으로 읽어왔다면 아래에 있는 함수를 호출해줌. 그 때 매개변수 data에 읽어온 json 내용이 담기게 됨
 			function(data) {
 				//data : {replyCnt:댓글개수, list:[ReplyDTO를 json으로 바꾼 문자열,...]}
@@ -76,7 +77,36 @@ const replyService = (function() {
 		
 	}
 	
-	return {add:insert, getList:selectAll, remove:"", update:"", get:"", displayTime:""}; 
+	function fmtTime(reply) {
+		let regdate = reply.regdate;
+		let updatedate = reply.updatedate;
+		let now = new Date();
+		let check = regdate == updatedate; //check가 false라면 수정을 했다는 뜻.
+		
+		let dateObj = new Date(check?regdate:updatedate);
+		//date와 regdate를 비교해서 같으면 수정을 하지 않은것이므로 regdate를 넣고, false라면 updatedate를 넣음
+		
+		//데이트객체.getTime() : 그 시간 정보를 밀리초로 변환
+		let gap = now.getTime() - dateObj.getTime();
+		
+		let str = "";
+		if(gap < 1000*60*60*24) {
+			let hh = dateObj.getHours();
+			let mi = dateObj.getMinutes();
+			let ss = dateObj.getSeconds();
+			
+			str = (hh>9?'':'0')+hh+":"+(mi>9?'':'0')+mi+":"+(ss>9?'':'0')+ss;
+		}else {
+			let yy = dateObj.getFullYear();
+			let mm = dateObj.getMounth()+1; //(1월 : 0, 2월 : 1, ...)
+			let dd = dateObj.getDate();
+			
+			str = yy+'/'+(mm>9?'':'0')+mm+'/'+(dd>9?'':'0')+dd;
+		}
+		return (check?'':'(수정됨)')+str;
+	}
+	
+	return {add:insert, getList:selectAll, remove:"", update:"", get:"", displayTime:"fmtTime"}; 
 })();
 
 //replyService.add() --> insert() replyService.add() 는  insert를 호출하는 것과 마찬가지이다.

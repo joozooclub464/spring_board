@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.springboard.domain.Criteria;
 import com.springboard.domain.ReplyDTO;
 
 //import com.springboard.mapper.ReplyMapper;
@@ -32,15 +33,23 @@ public class ReplyServiceTest {
 //	}
 	
 	
+//	@Test
+//	public void registTest() {
+//		ReplyDTO reply = new ReplyDTO();
+//		reply.setBoardnum(10L);
+//		reply.setReplywriter("apple");
+//		reply.setReplycontents("댓글댓글대앳글");
+//		
+//		service.regist(reply);
+//		log.info(reply.getReplynum());
+//	}
+	
 	@Test
-	public void registTest() {
-		ReplyDTO reply = new ReplyDTO();
-		reply.setBoardnum(10L);
-		reply.setReplywriter("apple");
-		reply.setReplycontents("댓글댓글대앳글");
-		
-		service.regist(reply);
-		log.info(reply.getReplynum());
+	public void getListTest() {
+		Criteria cri = new Criteria();
+		cri.setPagenum(1);
+		cri.setAmount(10);
+		log.info(service.getList(cri, 10L));
 	}
 
 }

@@ -17,7 +17,7 @@
 			select replynum, replywriter, replycontents, regdate, updatedate, boardnum
 			from (
 				select /*+ index_asc(spring_s_reply_pk)*/
-				rownum rn, replynum, replywriter, replycontents, regdate, updatedate, boardnu
+				rownum rn, replynum, replywriter, replycontents, regdate, updatedate, boardnum
 				from spring_reply where boardnum=#{boardnum} and rownum <= #{cri.pagenum}*#{cri.amount}
 			) where rn > (#{cri.pagenum}-1)*#{cri.amount}
 		]]>

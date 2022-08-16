@@ -3,7 +3,9 @@ package com.springboard.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springboard.domain.Criteria;
 import com.springboard.domain.ReplyDTO;
+import com.springboard.domain.ReplyPageDTO;
 import com.springboard.mapper.ReplyMapper;
 
 import lombok.Setter;
@@ -25,4 +27,10 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		return 1 == mapper.insert(reply);
 	}
+	
+	@Override
+	public ReplyPageDTO getList(Criteria cri, Long boardnum) {
+		return new ReplyPageDTO(mapper.getTotal(boardnum), mapper.getList(cri, boardnum));
+	}
+	
 }
