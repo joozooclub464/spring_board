@@ -22,4 +22,9 @@
 			) where rn > (#{cri.pagenum}-1)*#{cri.amount}
 		]]>
 	</select>
+	
+	<delete id="delete">
+		delete from spring_reply where replynum=#{replynum}
+	</delete>
+	
 </mapper>

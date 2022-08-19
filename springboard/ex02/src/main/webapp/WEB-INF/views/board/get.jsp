@@ -160,28 +160,109 @@
 						</li>
 					*/
 					let str = "";
-					for(let i=0, len=list.length; i<len; i++) {
+					for(let i=0, len = list.length ; i<len ; i++){
 						str += '<li style="clear:both;">';
-						str += '<div style="display:incline;float:left;">';
+						str += '<div style="display:inline;float:left;">';
 						str += '<strong>'+list[i].replywriter+'</strong>';
-						//str += `<strong>apple</strong>`;
-						str += '<p class="'+list[i].replynum+'">' + list[i].replycontents+'</p></div>';
+						//str += `<strong>${list[i].replywriter}</strong>`;
+						str += '<p class="'+ list[i].replynum +'">'+list[i].replycontents+'</p></div>'
 						//str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
 						str += '<div style="text-align:right">';
 						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>';
-						str += '<a href="#">수정</a>&nbsp;&nbsp;';
-						str += '<a href="#">삭제</a></div></li>';
+						str += '<a href="'+list[i].replynum+'" class="modify">수정</a>'
+						str += '<a href="'+list[i].replynum+'" class="mfinish" style="display:none;">수정완료</a>&nbsp;&nbsp;'
+						str += '<a href="'+list[i].replynum+'" class="remove">삭제</a></div></li>';
 					}
 					replies.html(str);
 					//페이징 처리하는 함수 호출
 					showReplyPage(replyCnt);
+					$(".remove").on("click",function(e) {
+						e.preventDefault();
+						let replynum = $(this).attr("href");
+						replyService.remove(
+							replynum,
+							function(result) {
+								if(result == "success") {
+									alert(replynum + "번 댓글 삭제 완료!");
+								}
+							},
+							function(e) {
+								alert("에러 발생!\n"+e);
+							}
+						);
+						//DOM으로 댓글 리스트 수정
+						location.reload();
+					})
 				}//여기까지가 하나의 함수
 			)
 		}
 		function showReplyPage(replyCnt) {
+			//pagenum : 7
+			//endPage : 10
+			let endPage = Math.ceil(pagenum/5.0)*5;
+			//startPage : 6
+			let startPage = endPage-4;
 			
+			//true
+			let prev = startPage!=1;
+			let next = false;
+			
+			if(endPage*5>=replyCnt) {
+				endPage = Math.ceil(replyCnt/5);
+			}
+			
+			if(endPage*5 < replyCnt) {
+				next = true;
+			}
+			
+			let str = "";
+			
+			if(matchMedia("screen and (max-width:918px)").matches) {
+				//핸드폰 환경의 DOM 작성				< 13 >
+				if(pagenum > 1){
+					str += "<a class='changePage' href='"+ (pagenum-1) +"'><code>&lt;</code></a>";
+				} 
+				str += "<code>"+pagenum+"</code>"
+				if(pagenum != endPage) {
+					str += "<a class='changePage' href='"+ (pagenum-1) +"'><code>&gt;</code></a>";
+				}
+			}else {
+				//PC 환경의 DOM 작성
+				//<<	>> 버튼 만들기
+				let start = pagenum != 1;
+				//128/5	-> 25.6 -> 26.0페이지
+				let last = pagenum != Math.ceil(replyCnt/5);
+				
+				if(start) {
+					str += "<a class='changePage' href='1'><code>&lt;&lt;</code></a>";
+				}
+				if(prev) {
+					str += "<a class='changePage' href='"+ (startPage-1) +"'><code>&lt;</code></a>";
+				}
+				for(let i = startPage; i<= endPage; i++) {
+					if(i == pagenum) {
+						str += "<code>" + i + "</code>";
+					}
+					else {
+						str += "<a class='changePage' href='"+i+"'>"+i+"</code></a>"
+					}
+				}
+			}
+			if(next) {
+				str += "<a class='changePage' href='"+ (endPage+1) +"'><code>&gt;</code></a>";
+			}
+			if(last) {
+				str += "<a class='changePage' href='"+ Math.ceil(replyCnt/5) +"'><code>&gt;</code></a>";
+			}
 		}
+		page.html(str);
 		
+		$(".changePage").on("click",function(e){
+			e.preventDefault();
+			let target = $(this).attr("href");
+			pagenum = parseInt(target);
+			showList(pagenum);
+		})
 	})
 
 

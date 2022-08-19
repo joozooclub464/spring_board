@@ -77,14 +77,15 @@
 											<td>${board.boardnum }</td>
 											<td><a class="get" href="${board.boardnum}">${board.boardtitle }</a></td>
 											<td>${board.boardwriter }</td>
-											<td>${board.regdate }</td>
-											<td>${board.updatedate }</td>
+											<td class="big-width">${board.regdate }</td>
+											<td class="big-width">${board.updatedate }</td>
 										</tr>
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td colspan="5">작성된 게시글이 없습니다.</td>
+										<td colspan="5" class="big-width">작성된 게시글이 없습니다.</td>
+										<td colspan="3" class="small-width">작성된 게시글이 없습니다.</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>				
@@ -110,7 +111,8 @@
 					<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
 				</form>
 				<!-- 페이징 처리 -->
-				<div style="text-align: center">
+				<!-- PC 환경 -->
+				<div style="text-align: center" class="big-width">
 					<c:if test="${pageMaker.prev}">
 						<a class="changePage" href="${pageMaker.startPage-1}"><code>&lt;</code></a>
 					</c:if>
@@ -126,6 +128,16 @@
 					</c:forEach>
 					<c:if test="${pageMaker.next }">
 						<a class="changePage" href="${pageMaker.endPage+1}"><code>&gt;</code></a>
+					</c:if>
+				</div>
+				<!-- 핸드폰 환경 -->
+				<div style="text-align: center" class="small-width">
+					<c:if test="${pageMaker.cri.pagenum > 1}">
+						<a class="changePage" href="${pageMaker.cri.pagenum-1}"><code>&lt;</code></a>
+					</c:if>
+					<code>${pageMaker.cri.pagenum}</code>
+					<c:if test="${pageMaker.cri.pagenum < pageMaker.realEnd}">
+						<a class="changePage" href="${pageMaker.cri.pagenum+1}"><code>&gt;</code></a>
 					</c:if>
 				</div>
 				<form id="pageForm" name="pageForm" action="/board/list" method="get">

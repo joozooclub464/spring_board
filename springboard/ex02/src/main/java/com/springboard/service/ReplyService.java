@@ -7,6 +7,7 @@ import com.springboard.domain.ReplyPageDTO;
 public interface ReplyService {
 	boolean regist(ReplyDTO reply);
 	ReplyPageDTO getList(Criteria cri, Long boardnum);
+	boolean remove(Long replynum);
 	
 	
 }

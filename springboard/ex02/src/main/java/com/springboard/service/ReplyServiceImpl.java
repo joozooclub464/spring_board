@@ -33,4 +33,9 @@ public class ReplyServiceImpl implements ReplyService {
 		return new ReplyPageDTO(mapper.getTotal(boardnum), mapper.getList(cri, boardnum));
 	}
 	
+	@Override
+	public boolean remove(Long replynum) {
+		return mapper.delete(replynum) == 1;
+	}
+	
 }

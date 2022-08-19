@@ -58,6 +58,7 @@ const replyService = (function() {
 		$.getJSON(
 			"/reply/pages/"+boardnum+"/"+pagenum+".json", //   /reply/pages/123/3.json 이런 형태로 보냄
 			//위의 uri의 json을 정상적으로 읽어왔다면 아래에 있는 함수를 호출해줌. 그 때 매개변수 data에 읽어온 json 내용이 담기게 됨
+			//json은 확장자. pagenum까지만 컨트롤러로 요청을 보냄
 			function(data) {
 				//data : {replyCnt:댓글개수, list:[ReplyDTO를 json으로 바꾼 문자열,...]}
 				if(callback) {
@@ -105,8 +106,27 @@ const replyService = (function() {
 		}
 		return (check?'':'(수정됨)')+str;
 	}
+	// reply/3 DELETE
+	//하나의 url로 전송 방식만 다르게 상태를 표현할 수 있음
+	function drop(replynum, callback, err) {
+		$.ajax({
+			type:"DELETE",
+			url:"/reply/"+replynum,
+			success:function(result,status,xhr) {
+				if(callback) { //get.jsp에서 넘겨받고 있는 callback
+					callback(result);
+				}
+			},
+			error:function(xhr,status,e) {
+				if(err) {
+					err(e);
+				}
+			}
+		})
+		
+	}
 	
-	return {add:insert, getList:selectAll, remove:"", update:"", get:"", displayTime:"fmtTime"}; 
+	return {add:insert, getList:selectAll, remove:drop, update:"", get:"", displayTime:"fmtTime"}; 
 })();
 
 //replyService.add() --> insert() replyService.add() 는  insert를 호출하는 것과 마찬가지이다.

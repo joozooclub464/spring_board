@@ -15,4 +15,5 @@ public interface ReplyMapper {
 	//MyBatis는 두 개 이상의 데이터를 파라미터로 넘길 때 객체나 Map, List등 혹은 @Param을 이용한다.
 	//정해진 파라미터는 MyBatis에서 #{param명}으로 사용 가능하다
 	List<ReplyDTO> getList(@Param("cri")Criteria cri, @Param("boardnum")Long boardnum);
+	int delete(Long replynum);
 }
