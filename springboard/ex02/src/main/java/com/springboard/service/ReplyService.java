@@ -8,7 +8,7 @@ public interface ReplyService {
 	boolean regist(ReplyDTO reply);
 	ReplyPageDTO getList(Criteria cri, Long boardnum);
 	boolean remove(Long replynum);
-	
+	boolean modify(ReplyDTO reply);
 	
 }
 

@@ -16,4 +16,5 @@ public interface ReplyMapper {
 	//정해진 파라미터는 MyBatis에서 #{param명}으로 사용 가능하다
 	List<ReplyDTO> getList(@Param("cri")Criteria cri, @Param("boardnum")Long boardnum);
 	int delete(Long replynum);
+	int update(ReplyDTO reply);
 }

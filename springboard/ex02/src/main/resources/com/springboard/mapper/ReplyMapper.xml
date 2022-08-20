@@ -23,8 +23,15 @@
 		]]>
 	</select>
 	
+	<update id="update">
+		update spring_reply
+		set replycontents=#{replycontents}, updatedate=sysdate
+		where replynum=#{replynum}
+	</update>
+	
 	<delete id="delete">
 		delete from spring_reply where replynum=#{replynum}
 	</delete>
+	
 	
 </mapper>

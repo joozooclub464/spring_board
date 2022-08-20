@@ -38,4 +38,10 @@ public class ReplyServiceImpl implements ReplyService {
 		return mapper.delete(replynum) == 1;
 	}
 	
+	@Override
+	public boolean modify(ReplyDTO reply) {
+		return mapper.update(reply) == 1;
+	}
+	
+	
 }

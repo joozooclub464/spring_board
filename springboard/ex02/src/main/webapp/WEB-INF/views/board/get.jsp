@@ -6,6 +6,13 @@
 <meta charset="UTF-8">
 <title>BOARD</title>
 <link rel="stylesheet" href="/resources/assets/css/main.css">
+<style>
+	.mdf{
+		height:75px;
+		width:100%;
+		resize:none;
+	}
+</style>
 </head>
 <body class="is-preload">
 	<div id="main">
@@ -92,6 +99,7 @@
 	//요소1.addEventListener("click",function(e) {
 	//	클릭되었을 때 수행할 문장
 	//})
+	let check = false;
 	$(".regist").on("click",function(e) {
 		e.preventDefault();
 		$(".replyForm").show();
@@ -162,13 +170,14 @@
 					let str = "";
 					for(let i=0, len = list.length ; i<len ; i++){
 						str += '<li style="clear:both;">';
-						str += '<div style="display:inline;float:left;">';
-						str += '<strong>'+list[i].replywriter+'</strong>';
+						str += '<div style="display:inline;float:left;width:80%">';
+						//만들어지는 모양 : <strong class="replywriter3">apple</strong>
+						str += '<strong class="replywriter'+list[i].replynum+'">'+list[i].replywriter+'</strong>';
 						//str += `<strong>${list[i].replywriter}</strong>`;
-						str += '<p class="'+ list[i].replynum +'">'+list[i].replycontents+'</p></div>'
+						str += '<p class="reply'+ list[i].replynum +'">'+list[i].replycontents+'</p></div>'
 						//str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
 						str += '<div style="text-align:right">';
-						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>';
+						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>'; 
 						str += '<a href="'+list[i].replynum+'" class="modify">수정</a>'
 						str += '<a href="'+list[i].replynum+'" class="mfinish" style="display:none;">수정완료</a>&nbsp;&nbsp;'
 						str += '<a href="'+list[i].replynum+'" class="remove">삭제</a></div></li>';
@@ -191,6 +200,45 @@
 							}
 						);
 						//DOM으로 댓글 리스트 수정
+						location.reload();
+					})
+					$(".modify").on("click",function(e){
+						e.preventDefault();
+						if(!check) {
+							let replynum = $(this).attr("href");
+							let replytag = $(".reply"+replynum);//댓글 내용이 써져있는 p태그  <p><textarea>댓글내용</textarea></p>
+							
+							//<p class="reply3"><textarea class="3 mdf">댓글내용</textarea></p>
+							replytag.html('<textarea class="'+replynum+' mdf">'+replytag.text()+'</textarea>')
+							$(this).hide();
+							
+							$(this).next().show();
+							
+							check = true;
+						}
+						else {
+							alert("이미 수정중인 댓글이 있습니다.");
+						}
+					})
+					$(".mfinish").on("click",function(e) {
+						e.preventDefault();
+						
+						let replynum = $(this).attr("href");
+						let boardnum = "${board.boardnum}";
+						let replywriter = $(".replywriter"+replynum).text();
+						let replycontents = $("."+replynum).val();
+						
+						replyService.modify(
+							{replynum:replynum, replycontents:replycontents, boardnum:boardnum, replywriter:replywriter},
+							function(result) {
+								if(result == "success") {
+									alert(replynum+"번 댓글 수정 완료!")
+								}
+							},
+							function(err) {
+								alert(e);
+							}
+						)
 						location.reload();
 					})
 				}//여기까지가 하나의 함수
@@ -247,21 +295,23 @@
 						str += "<a class='changePage' href='"+i+"'>"+i+"</code></a>"
 					}
 				}
-			}
+	//		}
 			if(next) {
 				str += "<a class='changePage' href='"+ (endPage+1) +"'><code>&gt;</code></a>";
 			}
 			if(last) {
 				str += "<a class='changePage' href='"+ Math.ceil(replyCnt/5) +"'><code>&gt;</code></a>";
 			}
-		}
+		}//
 		page.html(str);
+		}
 		
 		$(".changePage").on("click",function(e){
 			e.preventDefault();
 			let target = $(this).attr("href");
 			pagenum = parseInt(target);
 			showList(pagenum);
+			//target이없거나ㅜpagenum이없거나
 		})
 	})
 

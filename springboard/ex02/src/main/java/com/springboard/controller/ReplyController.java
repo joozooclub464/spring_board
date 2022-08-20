@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboard.domain.Criteria;
@@ -61,4 +62,21 @@ public class ReplyController {
 			new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	//PUT : 모든 데이터들을 다 전달해야 함, 자원의 전체 수정, 자원 내의 모든 필드를 전달해야 함, 전달하지 않은 필드는 모두 초기화 처리
+	//PATCH : 자원의 일부 수정, 수정한 필드만 전송
+	@RequestMapping(
+			method = {RequestMethod.PUT,RequestMethod.PATCH},
+			value = "/{replynum}",
+			consumes = "application/json",
+			produces = MediaType.TEXT_PLAIN_VALUE
+			)
+	public ResponseEntity<String> modify(@RequestBody ReplyDTO reply) {
+		log.info("@@@@@ modify @@@@@ :" +reply);
+		if(service.modify(reply)) {
+			return new ResponseEntity<>("success",HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

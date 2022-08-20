@@ -99,7 +99,7 @@ const replyService = (function() {
 			str = (hh>9?'':'0')+hh+":"+(mi>9?'':'0')+mi+":"+(ss>9?'':'0')+ss;
 		}else {
 			let yy = dateObj.getFullYear();
-			let mm = dateObj.getMounth()+1; //(1월 : 0, 2월 : 1, ...)
+			let mm = dateObj.getMonth()+1; //(1월 : 0, 2월 : 1, ...)
 			let dd = dateObj.getDate();
 			
 			str = yy+'/'+(mm>9?'':'0')+mm+'/'+(dd>9?'':'0')+dd;
@@ -126,7 +126,26 @@ const replyService = (function() {
 		
 	}
 	
-	return {add:insert, getList:selectAll, remove:drop, update:"", get:"", displayTime:"fmtTime"}; 
+	function update(reply, callback, err) {
+		$.ajax({
+			type:"PUT",
+			url:"/reply/"+reply.replynum,
+			data:JSON.stringify(reply),
+			contentType:"application/json; charset=utf-8",
+			success:function(result, status, xhr) {
+				if(callback) {
+					callback(result);
+				}
+			},
+			error:function(xhr,status,e) {
+				if(err){
+					err(e);
+				}
+			}
+		})
+	}
+	
+	return {add:insert, getList:selectAll, remove:drop, modify:update, get:"", displayTime:fmtTime}; 
 })();
 
 //replyService.add() --> insert() replyService.add() 는  insert를 호출하는 것과 마찬가지이다.
