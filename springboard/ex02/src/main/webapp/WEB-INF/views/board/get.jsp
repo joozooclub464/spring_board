@@ -278,7 +278,7 @@
 				//PC 환경의 DOM 작성
 				//<<	>> 버튼 만들기
 				let start = pagenum != 1;
-				//128/5	-> 25.6 -> 26.0페이지
+				//128/5	-> 25.6 -> 26.0페이지가 마지막 페이지
 				let last = pagenum != Math.ceil(replyCnt/5);
 				
 				if(start) {
@@ -292,28 +292,30 @@
 						str += "<code>" + i + "</code>";
 					}
 					else {
-						str += "<a class='changePage' href='"+i+"'>"+i+"</code></a>"
+						str += "<a class='changePage' href='"+i+"'><code>"+i+"</code></a>"
 					}
 				}
-	//		}
-			if(next) {
-				str += "<a class='changePage' href='"+ (endPage+1) +"'><code>&gt;</code></a>";
+	
+				if(next) {
+					str += "<a class='changePage' href='"+ (endPage+1) +"'><code>&gt;</code></a>";
+				}
+				if(last) {
+					str += "<a class='changePage' href='"+ Math.ceil(replyCnt/5) +"'><code>&gt;&gt;</code></a>";
+				}
 			}
-			if(last) {
-				str += "<a class='changePage' href='"+ Math.ceil(replyCnt/5) +"'><code>&gt;</code></a>";
-			}
-		}//
-		page.html(str);
-		}
+			page.html(str);
 		
 		$(".changePage").on("click",function(e){
 			e.preventDefault();
 			let target = $(this).attr("href");
 			pagenum = parseInt(target);
 			showList(pagenum);
-			//target이없거나ㅜpagenum이없거나
+			
 		})
-	})
+		
+	}
+		
+})
 
 
 </script>

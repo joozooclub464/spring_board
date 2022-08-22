@@ -168,6 +168,7 @@
 		pageForm.submit();
 	})
 	
+	
 	$("#searchForm a").on("click",function(e){
 		if(!searchForm.find("option:selected").val()){
 			alert("검색 기준을 선택하세요.");
