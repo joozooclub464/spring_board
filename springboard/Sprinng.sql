@@ -1,5 +1,7 @@
 DROP TABLE spring_board;
 DROP SEQUENCE SEQ_BOARD;
+DROP SEQUENCE SEQ_REPLY;
+DROP TABLE SPRING_REPLY;
 ------------------------------------------------------
 --게시판 테이블 생성
 CREATE SEQUENCE SEQ_BOARD;
@@ -59,6 +61,7 @@ CREATE TABLE SPRING_REPLY(
 );
 
 SELECT * FROM spring_reply;
+SELECT count(*) FROM spring_reply WHERE boardnum=421;
 
 --------------------------------------------------------
 --mapper만들기 실습용 쿼리
