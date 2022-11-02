@@ -44,7 +44,7 @@ select boardnum,boardtitle,boardcontents,boardwriter,regdate,updatedate from
 from spring_board where ( (boardtitle like '%목2%') ) and rownum<=1*10) 
 where rn>(1-1)*10;
 
-ALTER INDEX sys_c0010549 RENAME TO boardidx;
+ALTER INDEX sys_c0011819 RENAME TO boardidx; --spring_board테이블 > indexes > 인덱스 번호 복사하여 이름 바꿔줌.
 
 
 SELECT * FROM SPRING_BOARD;
