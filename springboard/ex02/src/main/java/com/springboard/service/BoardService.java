@@ -17,4 +17,5 @@ public interface BoardService {
 	public boolean modify(BoardDTO board);
 
 	public boolean remove(Long boardnum);
+
 }

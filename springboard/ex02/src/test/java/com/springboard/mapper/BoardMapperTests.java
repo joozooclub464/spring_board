@@ -64,27 +64,27 @@ public class BoardMapperTests {
 //	}
 //	@Test
 //	public void getTotalTest() {
-//		Criteria cri = new Criteria(3,10);
+//		Criteria cri = new Criteria(3,10); //3페이지 10개
 //		cri.setType("W");
 //		cri.setKeyword("apple");
 //		log.info(mapper.getTotal(cri));
 //	}
 	
-//	@Test
-//	public void getListWithKeyword() {
-//		Criteria cri = new Criteria(2,10);
-//		cri.setType("W");
-//		cri.setKeyword("apple");
-//		log.info(mapper.getList(cri));
-//	}
-	
 	@Test
 	public void getListWithKeyword() {
 		Criteria cri = new Criteria(2,10);
-		cri.setType("T");
-		cri.setKeyword("목2");
+		cri.setType("W");
+		cri.setKeyword("apple");
 		log.info(mapper.getList(cri));
 	}
+	
+//	@Test
+//	public void getListWithKeyword() {
+//		Criteria cri = new Criteria(2,10);
+//		cri.setType("T");
+//		cri.setKeyword("목2");
+//		log.info(mapper.getList(cri));
+//	}
 	
 }
 

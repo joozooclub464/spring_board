@@ -8,7 +8,7 @@
 //const mycar = create();
 const mycar = (function create() {
 	return {brand:"Ferrari"}; 
-})(); //js에서 함수를 선언함과 동시에 호출한것
+})(); //js에서 함수를 선언함과 동시에 호출한것 //Ferrari를 mycar에 담아줌
 //console.log(mycar.brand);
 
 function factory(f) {
@@ -19,7 +19,7 @@ function factory(f) {
 
 //callback함수 : 매개변수로 함수를 넘겨주고 그 함수 소괄호를 통해서 넘겨준 함수를 호출하는것
 //-------------------------------------------------------------
-const replyService = (function() {
+const replyService = (function() { //replyService는 js에서 dao같은 존재
 	function insert(reply,callback,err){
 		//댓글등록기능
 		console.log('add reply.....');
@@ -147,5 +147,7 @@ const replyService = (function() {
 	
 	return {add:insert, getList:selectAll, remove:drop, modify:update, get:"", displayTime:fmtTime}; 
 })();
-
 //replyService.add() --> insert() replyService.add() 는  insert를 호출하는 것과 마찬가지이다.
+
+
+

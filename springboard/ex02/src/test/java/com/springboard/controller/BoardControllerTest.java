@@ -78,6 +78,7 @@ public class BoardControllerTest {
 					
 		).andReturn();
 		ModelAndView mav = result.getModelAndView();
+		//MvcResult result를 mvc.perform을 통해서 만들어진 결과로 받을거고, mav는 그 result에서 getModelAndView를 꺼내옴. 
 			
 			//ModelMap은 Flash 영역은 나오지 않는다
 			log.info(mav.getModelMap());

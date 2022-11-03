@@ -104,7 +104,7 @@
 							<option value="TW" ${pageMaker.cri.type == "TW"?"selected":""}>제목 또는 작성자</option>
 							<option value="TCW" ${pageMaker.cri.type == "TCW"?"selected":""}>제목 또는 내용 또는 작성자</option>
 						</select>
-						<input type="text" name="keyword" id="keyword" value="${pageMaker.cri.keyword}">
+						<input type="text" name="keyword" id="keyword" value="${pageMaker.cri.keyword}"> <!-- 검색한게 있으면 keyword, 없으면 null -->
 						<a href="#" class="button primary icon solid fa-search">검색</a>						
 					</div>
 					<input type="hidden" name="pagenum" value="${pageMaker.cri.pagenum}">

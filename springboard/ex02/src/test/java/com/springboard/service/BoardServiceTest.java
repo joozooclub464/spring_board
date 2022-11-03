@@ -35,15 +35,28 @@ public class BoardServiceTest {
 //	public void registTest() {
 //		BoardDTO board = new BoardDTO();
 //		board.setBoardtitle("service 테스트로 만든 게시글");
-//		board.setBoardcontents("의미없는 내용 블라블라/ 집게 가고싶다");
+//		board.setBoardcontents("의미없는 내용 블라블라/ 취업하구싶어용");
 //		board.setBoardwriter("durian");
 //		service.regist(board);
 //	}
 	
-	@Test
-	public void getTest() {
-		BoardDTO board = service.get(1L); //오토박싱
-		log.info(board);
-	}
+//	@Test
+//	public void getTest() {
+//		BoardDTO board = service.get(1L); //오토박싱
+//		//롱타입의 변수를 클래스로 롱타입의 boardnum에 넘김
+//		log.info(board);
+//	}
+	
+	//연습중
+//	@Test
+//	public void modifyTest() {
+//		BoardDTO board = new BoardDTO();
+//		board.
+		
+//		BoardDTO board = service.modify(1L);
+//		board.setBoardtitle("제목수정테스트");
+//		board.setBoardcontents("내용수정테스트");
+//		service.regist(board);
+//	}
 	
 }

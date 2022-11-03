@@ -20,6 +20,7 @@
 				<br>
 				<div class="col-12">
 					<form method="post" action="/board/modify">
+						<!-- 폼 제출시 cri 함께 보내줘야 url에 검색정보도 함께 전송됨 -->
 						<input type="hidden" value="${cri.pagenum}" name="pagenum">
 						<input type="hidden" value="${cri.amount}" name="amount">
 						<input type="hidden" value="${cri.keyword}" name="keyword">

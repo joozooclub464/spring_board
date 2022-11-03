@@ -15,7 +15,7 @@
 					<h1 class="home">Board</h1>
 					<p>게시판 등록</p>
 				</header>
-				<a href="" class="button primary small">목록 보기</a>
+				<a href="/board/list${cri.listLink}" class="button primary small">목록 보기</a>
 				<br>
 				<br>
 				<div class="col-12">

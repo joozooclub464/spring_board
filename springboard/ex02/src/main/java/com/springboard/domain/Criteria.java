@@ -31,7 +31,7 @@ public class Criteria {
 		this.pagenum = pagenum;
 		this.amount = amount;
 	}
-	//현재 객체가 가지고 있는 pagenum, amount로 쿼리스트링을 만들어서 리턴하는 메소드
+	//현재 객체가 가지고 있는 pagenum, amount로 쿼리스트링을 만들어서 리턴하는 메소드 
 	public String getListLink() {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
 				.queryParam("pagenum", this.pagenum) //파라미터 추가

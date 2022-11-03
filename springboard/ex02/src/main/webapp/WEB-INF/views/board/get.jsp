@@ -62,6 +62,7 @@
 					<br>
 					<br>
 					<!-- style="display:none" -->
+					<!-- reply를 관리할 모듈 - /resources/assets/js/reply.js -->
 					<div class="replyForm row" style="display:none; justify-content: center; ">
 						<div style="width:15%;">
 							<h4>작성자</h4>
@@ -100,11 +101,14 @@
 	//	클릭되었을 때 수행할 문장
 	//})
 	let check = false;
+	
+	//댓글등록 버튼 클릭 시 댓글입력창이 뜸
 	$(".regist").on("click",function(e) {
 		e.preventDefault();
 		$(".replyForm").show();
 		$(this).hide(); //댓글등록폼이 보여지면 댓글등록 버튼은 숨겨져야 하기 때문에 this.hide를 사용함
 	})
+	//취소버튼 클릭 시 댓글입력창 숨김
 	$(".cancel").on("click",function(e) {
 		e.preventDefault();
 		$("[name='replywriter']").val(""); //제이쿼리는 css선택자를 사용할 수 있음
@@ -112,6 +116,7 @@
 		$(".replyForm").hide();
 		$(".regist").show(); //댓글등록버튼을 보여줌
 	})
+	//댓글 등록 버튼 클릭 시 댓글등록 실행
 	$(".finish").on("click",function(e){
 		let boardnum = "${board.boardnum}";
 		let replywriter = $("input[name='replywriter']").val();

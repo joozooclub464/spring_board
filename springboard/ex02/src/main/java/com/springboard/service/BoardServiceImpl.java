@@ -45,6 +45,7 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public boolean modify(BoardDTO board) {
 		return 1 == mapper.update(board);
+		//성공인지 실패인지를 넘겨주기 위해 boolean으로 리턴
 	}
 	
 	@Override

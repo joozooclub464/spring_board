@@ -76,9 +76,9 @@ public class BoardController {
 		if(service.modify(board)) {
 			ra.addFlashAttribute("mn",board.getBoardnum());
 		}
-		return "redirect:/board/list"+cri.getListLink();
+		return "redirect:/board/list"+cri.getListLink(); //수정을 실제로 했음. 시스템의 변화 有 -> redirect
 	}
-	
+
 	@PostMapping("/remove")
 	public String remove(Long boardnum, Criteria cri, RedirectAttributes ra) {
 		if(service.remove(boardnum)) {
@@ -86,9 +86,6 @@ public class BoardController {
 		}
 		return  "redirect:/board/list"+cri.getListLink();
 	}
-	
-	
-	
 	
 }
 
