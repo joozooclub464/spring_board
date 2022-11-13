@@ -24,7 +24,7 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public boolean regist(ReplyDTO reply) {
 		log.info("------regist------");
-		
+		//mapper.insert(reply) 성공한 행의 수가 1 혹은 다른 수(정수)로 리턴됨.
 		return 1 == mapper.insert(reply);
 	}
 	

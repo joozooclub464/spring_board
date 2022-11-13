@@ -27,9 +27,9 @@ import lombok.extern.log4j.Log4j;
 @RestController // : JSON 형태로 객체 데이터를 반환하기위한 Controller
 public class ReplyController {
 	
+	//service주입
 	@Setter(onMethod_ = @Autowired)
 	private ReplyService service;
-	
 	
 	
 	//ResponseEntity : 서버의 상태코드, 응답메시지, 데이터 등을 담을 수 있는 타입

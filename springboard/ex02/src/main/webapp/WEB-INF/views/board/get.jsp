@@ -134,7 +134,8 @@
 			//위의 함수들은 add쪽에서 받아서 콜백함수로 사용.
 			
 		)
-			//원래는 DOM 써서 내용 바꾸기
+			//DOM 써서 내용 바꾸기
+			//새로고침으로 대체
 			location.reload();
 	})
 	
@@ -166,7 +167,7 @@
 									<p>댓글테스트</p>
 							</div>
 							<div style="text-align:right">
-								<strong>2022-08-15 19:55:55</strong><br>
+								<strong>2022-11-13 19:55:55</strong><br>
 								<a href="#">수정</a>&nbsp;&nbsp;
 								<a href="#">삭제</a>
 							</div>
@@ -179,12 +180,12 @@
 						//만들어지는 모양 : <strong class="replywriter3">apple</strong>
 						str += '<strong class="replywriter'+list[i].replynum+'">'+list[i].replywriter+'</strong>';
 						//str += `<strong>${list[i].replywriter}</strong>`;
-						str += '<p class="reply'+ list[i].replynum +'">'+list[i].replycontents+'</p></div>'
+						str += '<p class="reply'+ list[i].replynum +'">'+list[i].replycontents+'</p></div>';
 						//str += `<p class="${list[i].replynum}">${list[i].replycontents}</p></div>`;
 						str += '<div style="text-align:right">';
 						str += '<strong>'+replyService.displayTime(list[i])+'</strong><br>'; 
-						str += '<a href="'+list[i].replynum+'" class="modify">수정</a>'
-						str += '<a href="'+list[i].replynum+'" class="mfinish" style="display:none;">수정완료</a>&nbsp;&nbsp;'
+						str += '<a href="'+list[i].replynum+'" class="modify">수정</a>';
+						str += '<a href="'+list[i].replynum+'" class="mfinish" style="display:none;">수정완료</a>&nbsp;&nbsp;';
 						str += '<a href="'+list[i].replynum+'" class="remove">삭제</a></div></li>';
 					}
 					replies.html(str);

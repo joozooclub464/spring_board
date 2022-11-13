@@ -25,12 +25,13 @@ public class ReplyServiceTest {
 	@Setter(onMethod_ = @Autowired)
 	private ReplyService service;
 	
-//	//service test
+	//service test
 //	@Test
 //	public void serviceTest() {
 //		assertNotNull(service);
 //		log.info(service);
 //	}
+	//servicetest //com.springboard.service.ReplyServiceImpl@73ad4ecc serviceImpl객체가 잘 들어온것 확인 可
 	
 	
 //	@Test
@@ -40,7 +41,7 @@ public class ReplyServiceTest {
 //		reply.setReplywriter("apple");
 //		reply.setReplycontents("댓글댓글대앳글");
 //		
-//		service.regist(reply);
+//		service.regist(reply); //객체넘김
 //		log.info(reply.getReplynum());
 //	}
 	

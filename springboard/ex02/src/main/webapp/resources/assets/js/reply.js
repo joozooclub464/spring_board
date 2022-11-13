@@ -55,7 +55,7 @@ const replyService = (function() { //replyService는 js에서 dao같은 존재
 		let pagenum = data.pagenum;//3
 		//ajax로 검색을 하고 결과를 받아와서 그 결과를 뿌려줘야함
 		//-> db에 있는걸 java로 검색하고 그 검색된 결과를 여기로 보내줌
-		$.getJSON(
+		$.getJSON( //json받아오는 함수
 			"/reply/pages/"+boardnum+"/"+pagenum+".json", //   /reply/pages/123/3.json 이런 형태로 보냄
 			//위의 uri의 json을 정상적으로 읽어왔다면 아래에 있는 함수를 호출해줌. 그 때 매개변수 data에 읽어온 json 내용이 담기게 됨
 			//json은 확장자. pagenum까지만 컨트롤러로 요청을 보냄
