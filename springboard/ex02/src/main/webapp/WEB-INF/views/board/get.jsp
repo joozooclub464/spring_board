@@ -278,7 +278,7 @@
 				} 
 				str += "<code>"+pagenum+"</code>"
 				if(pagenum != endPage) {
-					str += "<a class='changePage' href='"+ (pagenum-1) +"'><code>&gt;</code></a>";
+					str += "<a class='changePage' href='"+ (pagenum+1) +"'><code>&gt;</code></a>";
 				}
 			}else {
 				//PC 환경의 DOM 작성
@@ -298,7 +298,7 @@
 						str += "<code>" + i + "</code>";
 					}
 					else {
-						str += "<a class='changePage' href='"+i+"'><code>"+i+"</code></a>"
+						str += "<a class='changePage' href='"+i+"'><code>"+i+"</code></a>";
 					}
 				}
 	

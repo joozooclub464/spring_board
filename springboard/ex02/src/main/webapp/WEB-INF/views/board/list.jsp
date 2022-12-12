@@ -130,7 +130,7 @@
 						<a class="changePage" href="${pageMaker.endPage+1}"><code>&gt;</code></a>
 					</c:if>
 				</div>
-				<!-- 핸드폰 환경 -->
+				<!-- Mobile 환경 -->
 				<div style="text-align: center" class="small-width">
 					<c:if test="${pageMaker.cri.pagenum > 1}">
 						<a class="changePage" href="${pageMaker.cri.pagenum-1}"><code>&lt;</code></a>
